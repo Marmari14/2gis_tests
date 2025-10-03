@@ -6,7 +6,7 @@ import allure
 class TestFavoritesPlaceNegative:
 
 	@allure.description("Отправка запроса без токена")
-	def test_missing_token(self, post, base_url, valid_place_data):
+	def test_missing_token(self, post, valid_place_data):
 		response = post("/v1/favorites", data=valid_place_data)
 
 		assert response.status_code == 401
@@ -14,7 +14,7 @@ class TestFavoritesPlaceNegative:
 		assert "token" in error_message and "обязательным" in error_message
 
 	@allure.description("Отправка запроса с некорректным токеном")
-	def test_invalid_token(self, post, base_url, valid_place_data):
+	def test_invalid_token(self, post, valid_place_data):
 		response = post("/v1/favorites", data=valid_place_data, token="token")
 
 		assert response.status_code == 401
@@ -22,7 +22,7 @@ class TestFavoritesPlaceNegative:
 		assert "token" in error_message and "несуществующий" in error_message
 
 	@allure.description("Отправка запроса с 'протухшим' токеном")
-	def test_expired_token(self, post, base_url, auth_token, valid_place_data):
+	def test_expired_token(self, post, auth_token, valid_place_data):
 		token = auth_token
 
 		time.sleep(3)
